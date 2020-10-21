@@ -78,6 +78,8 @@
         <div id="kategorije_put">
             <input type="text" name="id_kategorije" id="id_kategorije">
 
+            <br>
+
             <input type="text" name="kategorija_naziv_put" id="kategorija_naziv_put"
                 placeholder="Unesite novi naziv kategorije">
         </div>
@@ -86,6 +88,7 @@
 
         <div id="novosti_put">
             <input type="text" name="id_novosti" id="id_novosti">
+            <br>
             <input type="text" name="naslov_novosti_put" placeholder="Unesite novi naslov novosti">
             <br>
             <textarea name="tekst_novosti_put" id="tekst_novosti_put" cols="30" rows="10"
@@ -270,7 +273,6 @@
                         };
                         //ispisaćemo te podatke u konzoli kako bismo bili siguri da dobijamo dobar izlaz
                         //konzoli pristupamo u brauzeru sa CTRL+Shift+i i biramo tab Console
-                        console.log(values);
                         //post zahtev se obrađuje na sličan način kao get
                         //potrebna su nam dva parametra u funkciji post
                         //url na koji šaljemo podatke
@@ -294,23 +296,34 @@
                 case "put":
                     if (tabela == "radio_novosti") {
 
-                        var id = document.getElementById('brisanje').value;
+                        var id = document.getElementById('id_novosti').value;
+
+                        var values = {
+                            "naslov": $("input[name=naslov_novosti_put]").val(),
+                            "tekst": $("#tekst_novosti_put").val(),
+                            "kategorija_id": parseInt($("#kategorija_odabir_put").val())
+                        }
 
                         $.ajax({
                             url: "http://localhost:8080/rest/api/novosti/" + id,
-                            type: "DELETE",
+                            data: JSON.stringify(values),
+                            type: "PUT",
                             success: function (data) {
                                 alert("Odgovor od servera> " + data['poruka']);
                             }
                         });
                     } else {
-                        var id = document.getElementById('brisanje').value;
+                        var id = document.getElementById('id_kategorije').value;
 
+                        var values = {
+                            "kategorija": document.getElementById("kategorija_naziv_put").value
+                        }
                         $.ajax({
                             url: "http://localhost:8080/rest/api/kategorije/" + id,
-                            type: "DELETE",
+                            data: JSON.stringify(values),
+                            type: "PUT",
                             success: function (data) {
-                                alert(data);
+                                alert("Odgovor od servera> " + data['poruka']);
                             }
                         });
                     }
@@ -334,7 +347,7 @@
                             url: "http://localhost:8080/rest/api/kategorije/" + id,
                             type: "DELETE",
                             success: function (data) {
-                                alert(data);
+                                alert("Odgovor od servera> " + data['poruka']);
                             }
                         });
                     }
